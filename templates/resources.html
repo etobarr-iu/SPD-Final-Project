@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Resources - Smart Neighborhood Exchange{% endblock %}
+
+{% block content %}
+<h2>Available Resources</h2>
+<ul>
+    {% for item in resources %}
+    <li>
+        <a href="{{ url_for('resource_detail', resource_id=item.id) }}">{{ item.name }}</a> - {{ item.description }}
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

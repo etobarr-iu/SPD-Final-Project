@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Smart Neighborhood Exchange{% endblock %}
+
+{% block content %}
+<h2>Welcome to Smart Neighborhood Exchange</h2>
+<p>Share, reserve, and manage community resources seamlessly.</p>
+<div>
+    <a href="{{ url_for('resources_list') }}" class="button">Browse Resources</a>
+    <a href="{{ url_for('events_list') }}" class="button">Explore Events</a>
+</div>
+{% endblock %}

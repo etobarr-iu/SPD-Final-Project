@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Resource Details - Smart Neighborhood Exchange{% endblock %}
+
+{% block content %}
+<h2>{{ resource.name }}</h2>
+<p>{{ resource.description }}</p>
+
+<h3>Availability</h3>
+<p>Available from: 2024-11-01 to 2024-12-31</p>
+
+<form method="POST" action="{{ url_for('reserve_resource', resource_id=resource.id) }}">
+    <label for="date">Select a Date:</label>
+    <input type="date" name="date" id="date" required>
+    <button type="submit">Reserve</button>
+</form>
+{% endblock %}

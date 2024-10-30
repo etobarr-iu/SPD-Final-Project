@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - Smart Neighborhood Exchange{% endblock %}
+
+{% block content %}
+<h2>{{ user.name }}'s Profile</h2>
+<p>Reputation Score: {{ user.reputation }}</p>
+
+<h3>Your Shared Resources</h3>
+<ul>
+    {% for resource in user.resources %}
+    <li>{{ resource.name }} - {{ resource.description }}</li>
+    {% endfor %}
+</ul>
+
+<h3>Reservation History</h3>
+<ul>
+    {% for reservation in user.reservations %}
+    <li>{{ reservation.resource_name }} on {{ reservation.date }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}
