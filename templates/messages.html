@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+
+{% block title %}Messages{% endblock %}
+{% block content_title %}Your Messages{% endblock %}
+
+{% block content %}
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <h3>Inbox</h3>
+    <ul>
+        {% for message in messages %}
+            <li>
+                <strong>From:</strong> User {{ message['sender_id'] }}<br>
+                <strong>To:</strong> User {{ message['receiver_id'] }}<br>
+                <strong>Message:</strong> {{ message['content'] }}<br>
+                <strong>Sent:</strong> {{ message['timestamp'] }}
+            </li>
+            <hr>
+        {% endfor %}
+    </ul>
+
+    <h3>Send a New Message</h3>
+    <form method="POST" action="{{ url_for('messages') }}">
+        <label for="receiver_id">Recipient ID:</label>
+        <input type="text" name="receiver_id" required><br>
+
+        <label for="content">Message:</label>
+        <textarea name="content" required></textarea><br>
+
+        <input type="submit" value="Send Message">
+    </form>
+{% endblock %}

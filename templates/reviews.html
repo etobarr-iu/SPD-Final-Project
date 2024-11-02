@@ -1,0 +1,43 @@
+{% extends 'layout.html' %}
+
+{% block title %}Reviews{% endblock %}
+{% block content_title %}User Reviews{% endblock %}
+
+{% block content %}
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <h3>Reviews Received</h3>
+    <ul>
+        {% for review in reviews %}
+            <li>
+                <strong>Reviewer:</strong> User {{ review['reviewer_id'] }}<br>
+                <strong>Rating:</strong> {{ review['rating'] }} / 5<br>
+                <strong>Comment:</strong> {{ review['comment'] }}<br>
+                <strong>Timestamp:</strong> {{ review['timestamp'] }}
+            </li>
+            <hr>
+        {% endfor %}
+    </ul>
+
+    <h3>Submit a New Review</h3>
+    <form method="POST" action="{{ url_for('reviews') }}">
+        <label for="user_id">User ID to Review:</label>
+        <input type="text" name="user_id" required><br>
+
+        <label for="rating">Rating (1-5):</label>
+        <input type="number" name="rating" min="1" max="5" required><br>
+
+        <label for="comment">Comment:</label>
+        <textarea name="comment"></textarea><br>
+
+        <input type="submit" value="Submit Review">
+    </form>
+{% endblock %}
