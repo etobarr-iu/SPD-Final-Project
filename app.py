@@ -10,13 +10,17 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
-# Authentication and Registration
 @app.route('/registration')
+def registration():
+    return render_template('register.html')
+
 @app.route('/register', methods=['POST'])
 def register():
     name = request.form['name']
     email = request.form['email']
     password = request.form['password']
+    profile_image = request.form.get('profile_image', '')
+    location = request.form.get('location', '')
 
     if not name or not email or not password:
         flash('Name, email, and password are required', 'error')
@@ -24,7 +28,10 @@ def register():
 
     conn = get_db_connection()
     try:
-        conn.execute("INSERT INTO Users (name, email, password) VALUES (?, ?, ?)", (name, email, password))
+        conn.execute(
+            "INSERT INTO Users (name, email, password, profile_image, location) VALUES (?, ?, ?, ?, ?)",
+            (name, email, password, profile_image, location)
+        )
         conn.commit()
         flash('Registration successful', 'success')
     except sqlite3.IntegrityError:
@@ -32,7 +39,8 @@ def register():
     finally:
         conn.close()
 
-    return redirect(url_for('registration'))
+    return redirect(url_for('login'))
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -63,22 +71,23 @@ def logout():
     flash('Logged out successfully', 'success')
     return redirect(url_for('index'))
 
-# Homepage
 @app.route('/')
 @app.route('/index')
 def index():
     conn = get_db_connection()
 
+    # Recent listings query remains the same
     recent_listings = conn.execute('''
-        SELECT Resources.*, Users.name AS user_name
+        SELECT Resources.*, Users.name AS user_name, Users.profile_image
         FROM Resources
         JOIN Users ON Resources.user_id = Users.user_id
         ORDER BY date_posted DESC
         LIMIT 5
     ''').fetchall()
 
+    # Top-rated users query now includes profile_image
     top_rated_users = conn.execute('''
-        SELECT Users.user_id, Users.name, AVG(Reviews.rating) AS average_rating
+        SELECT Users.user_id, Users.name, Users.profile_image, AVG(Reviews.rating) AS average_rating
         FROM Reviews
         JOIN Users ON Reviews.user_id = Users.user_id
         GROUP BY Users.user_id
@@ -90,7 +99,6 @@ def index():
     conn.close()
     return render_template('homepage.html', recent_listings=recent_listings, top_rated_users=top_rated_users)
 
-# User Profile
 @app.route('/profile')
 def profile():
     user_id = session.get('user_id')
@@ -99,21 +107,92 @@ def profile():
         return redirect(url_for('login'))
 
     conn = get_db_connection()
-    user = conn.execute("SELECT * FROM Users WHERE user_id=?", (user_id,)).fetchone()
+    user = conn.execute("SELECT * FROM Users WHERE user_id = ?", (user_id,)).fetchone()
     conn.close()
 
-    return render_template('profile.html', user_name=user['name'], user_id=user_id)
+    return render_template('profile.html', 
+                           user_name=user['name'], 
+                           user_email=user['email'], 
+                           user_location=user['location'],
+                           user_profile_image=user['profile_image'])
 
-# Resources
-@app.route('/resources')
+@app.route('/edit_profile', methods=['GET', 'POST'])
+def edit_profile():
+    if 'user_id' not in session:
+        flash('Please log in to access your profile', 'error')
+        return redirect(url_for('login'))
+
+    user_id = session['user_id']
+    conn = get_db_connection()
+
+    if request.method == 'POST':
+        # Get form data
+        name = request.form['name']
+        email = request.form['email']
+        location = request.form.get('location', '')
+        profile_image = request.form.get('profile_image', '')
+
+        # Update the user's profile information
+        conn.execute('''
+            UPDATE Users 
+            SET name = ?, email = ?, location = ?, profile_image = ? 
+            WHERE user_id = ?
+        ''', (name, email, location, profile_image, user_id))
+        conn.commit()
+        conn.close()
+
+        flash('Profile updated successfully!', 'success')
+        return redirect(url_for('profile'))
+
+    # GET request: Retrieve the current user information to pre-fill the form
+    user = conn.execute('SELECT * FROM Users WHERE user_id = ?', (user_id,)).fetchone()
+    conn.close()
+
+    return render_template('edit_profile.html', 
+                           user_name=user['name'], 
+                           user_email=user['email'], 
+                           user_location=user['location'], 
+                           user_profile_image=user['profile_image'])
+
+
+
+@app.route('/resources', methods=['GET'])
 def resources():
     conn = get_db_connection()
-    resources = conn.execute('''
+
+    # Get search parameters
+    category = request.args.get('category', '').strip()
+    keywords = request.args.get('keywords', '').strip()
+    location = request.args.get('location', '').strip()
+
+    # Base query for fetching resources
+    query = '''
         SELECT Resources.*, Users.name AS user_name
         FROM Resources
         JOIN Users ON Resources.user_id = Users.user_id
-    ''').fetchall()
+    '''
+    filters = []
+    params = []
+
+    # Add filters based on search parameters
+    if category:
+        filters.append("Resources.category LIKE ?")
+        params.append(f"%{category}%")
+    if keywords:
+        filters.append("(Resources.title LIKE ? OR Resources.description LIKE ?)")
+        params.extend([f"%{keywords}%", f"%{keywords}%"])
+    if location:
+        filters.append("Users.location LIKE ?")
+        params.append(f"%{location}%")
+
+    # If there are filters, add WHERE clause to the query
+    if filters:
+        query += " WHERE " + " AND ".join(filters)
+
+    # Execute the query with parameters
+    resources = conn.execute(query, params).fetchall()
     conn.close()
+
     return render_template('resources.html', resources=resources)
 
 @app.route('/my_resources', methods=['GET', 'POST'])
@@ -125,20 +204,27 @@ def my_resources():
     conn = get_db_connection()
 
     if request.method == 'POST':
+        # Adding a new resource
         title = request.form['title']
         description = request.form.get('description', '')
         category = request.form['category']
         availability = request.form.get('availability', 'available')
+        images = request.form.get('images', '')  # New field for image path
         user_id = session['user_id']
+        
         conn.execute(
-            'INSERT INTO Resources (user_id, title, description, category, availability, date_posted) VALUES (?, ?, ?, ?, ?, datetime("now"))',
-            (user_id, title, description, category, availability)
+            'INSERT INTO Resources (user_id, title, description, category, availability, images, date_posted) VALUES (?, ?, ?, ?, ?, ?, datetime("now"))',
+            (user_id, title, description, category, availability, images)
         )
         conn.commit()
         flash('Resource added successfully!', 'success')
 
-    my_resources = conn.execute('SELECT * FROM Resources WHERE user_id = ?', (session['user_id'],)).fetchall()
+    # Retrieve all resources created by the logged-in user
+    my_resources = conn.execute('''
+        SELECT * FROM Resources WHERE user_id = ?
+    ''', (session['user_id'],)).fetchall()
     conn.close()
+
     return render_template('my_resources.html', resources=my_resources)
 
 @app.route('/edit_resource/<int:resource_id>', methods=['GET', 'POST'])
@@ -176,7 +262,6 @@ def delete_resource(resource_id):
     flash('Resource deleted successfully', 'success')
     return redirect(url_for('my_resources'))
 
-# Messages
 @app.route('/messages', methods=['GET', 'POST'])
 def messages():
     if 'user_id' not in session:
@@ -195,28 +280,26 @@ def messages():
         conn.commit()
         flash('Message sent!', 'success')
 
-    inbox_messages = conn.execute('''
-        SELECT Messages.*, sender.name AS sender_name, receiver.name AS receiver_name
+    # Retrieve all messages involving the user
+    all_messages = conn.execute('''
+        SELECT Messages.*, 
+               sender.name AS sender_name, sender.profile_image AS sender_image,
+               receiver.name AS receiver_name
         FROM Messages
         JOIN Users AS sender ON Messages.sender_id = sender.user_id
         JOIN Users AS receiver ON Messages.receiver_id = receiver.user_id
-        WHERE Messages.receiver_id = ?
-    ''', (session['user_id'],)).fetchall()
+        WHERE Messages.receiver_id = ? OR Messages.sender_id = ?
+        ORDER BY Messages.timestamp DESC
+    ''', (session['user_id'], session['user_id'])).fetchall()
 
-    sent_messages = conn.execute('''
-        SELECT Messages.*, sender.name AS sender_name, receiver.name AS receiver_name
-        FROM Messages
-        JOIN Users AS sender ON Messages.sender_id = sender.user_id
-        JOIN Users AS receiver ON Messages.receiver_id = receiver.user_id
-        WHERE Messages.sender_id = ?
-    ''', (session['user_id'],)).fetchall()
-
+    # Retrieve list of all users for recipient dropdown, excluding the current user
     users = conn.execute('SELECT user_id, name FROM Users WHERE user_id != ?', (session['user_id'],)).fetchall()
+
     conn.close()
 
-    return render_template('messages.html', inbox_messages=inbox_messages, sent_messages=sent_messages, users=users)
+    return render_template('messages.html', all_messages=all_messages, users=users)
 
-# Reviews
+
 @app.route('/reviews', methods=['GET', 'POST'])
 def reviews():
     if 'user_id' not in session:
@@ -236,16 +319,17 @@ def reviews():
         conn.commit()
         flash('Review submitted successfully!', 'success')
 
-    reviews = conn.execute(
-        'SELECT Reviews.*, reviewer.name AS reviewer_name '
-        'FROM Reviews '
-        'JOIN Users AS reviewer ON Reviews.reviewer_id = reviewer.user_id '
-        'WHERE Reviews.user_id = ?',
-        (session['user_id'],)
-    ).fetchall()
+    # Retrieve reviews with reviewer profile image
+    reviews = conn.execute('''
+        SELECT Reviews.*, reviewer.name AS reviewer_name, reviewer.profile_image AS reviewer_image
+        FROM Reviews
+        JOIN Users AS reviewer ON Reviews.reviewer_id = reviewer.user_id
+        WHERE Reviews.user_id = ?
+    ''', (session['user_id'],)).fetchall()
     conn.close()
 
     return render_template('reviews.html', reviews=reviews)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

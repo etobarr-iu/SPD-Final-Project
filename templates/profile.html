@@ -8,13 +8,22 @@
     <ul>
         <li><strong>Email:</strong> {{ user_email }}</li>
         <li><strong>Location:</strong> {{ user_location }}</li>
+        <li><strong>Profile Image:</strong><br>
+            {% if user_profile_image %}
+                <img src="{{ url_for('static', filename=user_profile_image) }}" alt="Profile Image" width="150">
+            {% else %}
+                <p>No profile image provided</p>
+            {% endif %}
+        </li>
     </ul>
+
+    <a href="{{ url_for('edit_profile') }}" class="button">Edit Profile</a>
 
     <h3>Manage Your Account</h3>
     <ul>
-        <li><a href="{{ url_for('my_resources') }}">My Resources</a> - View, add, edit, or delete your resources.</li>
-        <li><a href="{{ url_for('messages') }}">Messages</a> - View and send messages.</li>
-        <li><a href="{{ url_for('reviews') }}">Reviews</a> - View and add reviews.</li>
+        <li><a href="{{ url_for('my_resources') }}">My Resources</a></li>
+        <li><a href="{{ url_for('messages') }}">Messages</a></li>
+        <li><a href="{{ url_for('reviews') }}">Reviews</a></li>
     </ul>
 
     <p><a href="{{ url_for('logout') }}">Logout</a></p>

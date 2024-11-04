@@ -1,3 +1,5 @@
+-- ..\..\sqlFolder\sqlite3.exe .\exchange.db
+
 -- Users Table
 CREATE TABLE Users (
     user_id INTEGER PRIMARY KEY AUTOINCREMENT,

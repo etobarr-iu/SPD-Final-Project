@@ -15,7 +15,12 @@
                         <strong>Description:</strong> {{ resource['description'] }}<br>
                         <strong>Category:</strong> {{ resource['category'] }}<br>
                         <strong>Availability:</strong> {{ resource['availability'] }}<br>
-                        <strong>Posted on:</strong> {{ resource['date_posted'] }}<br>
+                        {% if resource['images'] %}
+                            <img src="{{ url_for('static', filename=resource['images']) }}" alt="Resource Image" width="150">
+                        {% else %}
+                            <p>No image provided</p>
+                        {% endif %}
+                        <br>
                         <a href="{{ url_for('edit_resource', resource_id=resource['resource_id']) }}">Edit</a> |
                         <form method="POST" action="{{ url_for('delete_resource', resource_id=resource['resource_id']) }}" style="display:inline;">
                             <button type="submit" onclick="return confirm('Are you sure you want to delete this resource?');">Delete</button>
@@ -44,6 +49,9 @@
                     <option value="available" selected>Available</option>
                     <option value="reserved">Reserved</option>
                 </select><br>
+
+                <label for="images">Image Path:</label>
+                <input type="text" name="images" placeholder="e.g., /static/images/resource.jpg"><br>
 
                 <input type="submit" value="Add Resource">
             </form>

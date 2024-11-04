@@ -1,11 +1,9 @@
 {% extends 'layout.html' %}
 
 {% block title %}Registration Page{% endblock %}
-
-{% block content_title %}Registration Page{% endblock %}
+{% block content_title %}Register{% endblock %}
 
 {% block content %}
-
     {% with messages = get_flashed_messages() %}
         {% if messages %}
             <ul>
@@ -16,15 +14,21 @@
         {% endif %}
     {% endwith %}
 
-    <form method="POST" action="/register">
+    <form method="POST" action="{{ url_for('register') }}">
         <label for="name">Name:</label>
-        <input type="text" name="name" required autocomplete="off"><br>
+        <input type="text" name="name" id="name" required><br>
 
         <label for="email">Email:</label>
-        <input type="email" name="email" required autocomplete="off"><br>
+        <input type="email" name="email" id="email" required><br>
 
         <label for="password">Password:</label>
-        <input type="password" name="password" required autocomplete="off"><br>
+        <input type="password" name="password" id="password" required><br>
+
+        <label for="profile_image">Profile Image (Path):</label>
+        <input type="text" name="profile_image" id="profile_image" placeholder="e.g., /static/images/profile.jpg"><br>
+
+        <label for="location">Location:</label>
+        <input type="text" name="location" id="location" placeholder="e.g., New York, USA"><br>
 
         <input type="submit" value="Register">
     </form>

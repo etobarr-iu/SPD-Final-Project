@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block title %}Resources{% endblock %}
-{% block content_title %}Available Resources{% endblock %}
+{% block content_title %}Resources{% endblock %}
 
 {% block content %}
     <h3>Resource Listings</h3>
@@ -11,9 +11,15 @@
                 <strong>Title:</strong> {{ resource['title'] }}<br>
                 <strong>Description:</strong> {{ resource['description'] }}<br>
                 <strong>Category:</strong> {{ resource['category'] }}<br>
+                <strong>Location:</strong> {{ resource['location'] }}<br>
                 <strong>Availability:</strong> {{ resource['availability'] }}<br>
                 <strong>Posted by:</strong> {{ resource['user_name'] }}<br>
-                <strong>Posted on:</strong> {{ resource['date_posted'] }}
+                <strong>Posted on:</strong> {{ resource['date_posted'] }}<br>
+                {% if resource['images'] %}
+                    <img src="{{ url_for('static', filename=resource['images']) }}" alt="Resource Image" width="150">
+                {% else %}
+                    <p>No image provided</p>
+                {% endif %}
             </li>
             <hr>
         {% endfor %}

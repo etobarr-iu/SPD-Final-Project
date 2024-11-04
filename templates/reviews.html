@@ -18,7 +18,10 @@
     <ul>
         {% for review in reviews %}
             <li>
-                <strong>Reviewer:</strong> User {{ review['reviewer_id'] }}<br>
+                {% if review['reviewer_image'] %}
+                    <img src="{{ url_for('static', filename=review['reviewer_image']) }}" alt="Reviewer Image" width="50">
+                {% endif %}
+                <strong>Reviewer:</strong> {{ review['reviewer_name'] }} (User {{ review['reviewer_id'] }})<br>
                 <strong>Rating:</strong> {{ review['rating'] }} / 5<br>
                 <strong>Comment:</strong> {{ review['comment'] }}<br>
                 <strong>Timestamp:</strong> {{ review['timestamp'] }}
