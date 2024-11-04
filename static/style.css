@@ -173,15 +173,32 @@ input[type="submit"]:hover {
 /* Container for the messages page layout */
 .messages-container {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: 20px;
 }
 
-/* Style for the inbox column */
-.inbox {
-    flex: 1;
-    min-width: 250px;
-    max-width: 60%;
+/* Toggle buttons styling */
+.toggle-buttons {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.toggle-buttons button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.toggle-buttons button:hover {
+    background-color: #0056b3;
+}
+
+/* Styling for Inbox and Sent sections */
+.inbox, .sent {
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
@@ -190,47 +207,58 @@ input[type="submit"]:hover {
 
 /* Style for the send message form column */
 .send-message-form {
-    flex: 1;
-    min-width: 250px;
-    max-width: 35%;
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Form elements styling */
-.send-message-form form label,
-.inbox ul li {
-    margin-top: 10px;
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .messages-container {
+        flex-direction: column;
+    }
 }
 
-.send-message-form input,
-.send-message-form textarea {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-}
-
-.send-message-form input[type="submit"] {
-    background-color: #007bff;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 15px;
-}
-
-.send-message-form input[type="submit"]:hover {
-    background-color: #0056b3;
-}
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .resources-container {
+        flex-direction: column;
+    }
+}
+
+/* Homepage sections container */
+.homepage-sections {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* Styling for recent listings and top-rated users sections */
+.recent-listings, .top-rated-users {
+    flex: 1;
+    min-width: 250px;
+    max-width: 45%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling for listings and users lists */
+.recent-listings ul, .top-rated-users ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.recent-listings li, .top-rated-users li {
+    margin-bottom: 15px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .homepage-sections {
         flex-direction: column;
     }
 }

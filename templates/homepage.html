@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+
+{% block title %}Home{% endblock %}
+{% block content_title %}Welcome to Smart Neighborhood Exchange{% endblock %}
+
+{% block content %}
+    <div class="homepage-sections">
+        <!-- Recent Listings Section -->
+        <div class="recent-listings">
+            <h3>Recent Listings</h3>
+            <ul>
+                {% for listing in recent_listings %}
+                    <li>
+                        <strong>Title:</strong> {{ listing['title'] }}<br>
+                        <strong>Description:</strong> {{ listing['description'] }}<br>
+                        <strong>Category:</strong> {{ listing['category'] }}<br>
+                        <strong>Availability:</strong> {{ listing['availability'] }}<br>
+                        <strong>Posted by:</strong> {{ listing['user_name'] }}<br>
+                        <strong>Posted on:</strong> {{ listing['date_posted'] }}
+                    </li>
+                    <hr>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Top-Rated Users Section -->
+        <div class="top-rated-users">
+            <h3>Top-Rated Users</h3>
+            <ul>
+                {% for user in top_rated_users %}
+                    <li>
+                        <strong>Name:</strong> {{ user['name'] }}<br>
+                        <strong>Average Rating:</strong> {{ user['average_rating']|round(1) }} / 5
+                    </li>
+                    <hr>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}

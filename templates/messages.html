@@ -4,12 +4,36 @@
 {% block content_title %}Your Messages{% endblock %}
 
 {% block content %}
+    <!-- Column for Send Message Form -->
+    <div class="send-message-form">
+        <h3>Send a New Message</h3>
+        <form method="POST" action="{{ url_for('messages') }}">
+            <label for="receiver_id">Recipient:</label>
+            <select name="receiver_id" required>
+                <option value="" disabled selected>Select a recipient</option>
+                {% for user in users %}
+                    <option value="{{ user['user_id'] }}">{{ user['name'] }}</option>
+                {% endfor %}
+            </select><br>
+
+            <label for="content">Message:</label>
+            <textarea name="content" required></textarea><br>
+
+            <input type="submit" value="Send Message">
+        </form>
+    </div>
+
     <div class="messages-container">
         <!-- Column for Inbox -->
-        <div class="inbox">
+        <div id="inbox" class="inbox" style="display: block;">
+            <!-- Toggle Buttons for Inbox and Sent -->
+            <div class="toggle-buttons">
+                <button onclick="showInbox()">Inbox</button>
+                <button onclick="showSent()">Sent</button>
+            </div>
             <h3>Inbox</h3>
             <ul>
-                {% for message in messages %}
+                {% for message in inbox_messages %}
                     <li>
                         <strong>From:</strong> {{ message['sender_name'] }}<br>
                         <strong>To:</strong> {{ message['receiver_name'] }}<br>
@@ -21,18 +45,33 @@
             </ul>
         </div>
 
-        <!-- Column for Send Message Form -->
-        <div class="send-message-form">
-            <h3>Send a New Message</h3>
-            <form method="POST" action="{{ url_for('messages') }}">
-                <label for="receiver_id">Recipient ID:</label>
-                <input type="text" name="receiver_id" required><br>
-
-                <label for="content">Message:</label>
-                <textarea name="content" required></textarea><br>
-
-                <input type="submit" value="Send Message">
-            </form>
+        <!-- Column for Sent Messages -->
+        <div id="sent" class="sent" style="display: none;">
+            <h3>Sent Messages</h3>
+            <ul>
+                {% for message in sent_messages %}
+                    <li>
+                        <strong>From:</strong> {{ message['sender_name'] }}<br>
+                        <strong>To:</strong> {{ message['receiver_name'] }}<br>
+                        <strong>Message:</strong> {{ message['content'] }}<br>
+                        <strong>Sent:</strong> {{ message['timestamp'] }}
+                    </li>
+                    <hr>
+                {% endfor %}
+            </ul>
         </div>
     </div>
+
+    <script>
+        // JavaScript functions to toggle between Inbox and Sent messages
+        function showInbox() {
+            document.getElementById('inbox').style.display = 'block';
+            document.getElementById('sent').style.display = 'none';
+        }
+
+        function showSent() {
+            document.getElementById('inbox').style.display = 'none';
+            document.getElementById('sent').style.display = 'block';
+        }
+    </script>
 {% endblock %}
