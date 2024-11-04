@@ -88,9 +88,24 @@ def logout():
     flash('Logged out successfully', 'success')
     return redirect(url_for('index'))
 
-# Route to view and add resources
-@app.route('/resources', methods=['GET', 'POST'])
+@app.route('/resources')
 def resources():
+    conn = get_db_connection()
+    resources = conn.execute('''
+        SELECT Resources.*, Users.name AS user_name
+        FROM Resources
+        JOIN Users ON Resources.user_id = Users.user_id
+    ''').fetchall()
+    conn.close()
+    return render_template('resources.html', resources=resources)
+
+# Route to display and manage the user's own resources
+@app.route('/my_resources', methods=['GET', 'POST'])
+def my_resources():
+    if 'user_id' not in session:
+        flash('Please log in to access your resources', 'error')
+        return redirect(url_for('login'))
+
     conn = get_db_connection()
 
     if request.method == 'POST':
@@ -107,19 +122,60 @@ def resources():
         conn.commit()
         flash('Resource added successfully!', 'success')
 
-    # Retrieve all resources with user names
-    resources = conn.execute('''
-        SELECT Resources.*, Users.name AS user_name
-        FROM Resources
-        JOIN Users ON Resources.user_id = Users.user_id
-    ''').fetchall()
+    # Retrieve all resources created by the logged-in user
+    my_resources = conn.execute('''
+        SELECT * FROM Resources WHERE user_id = ?
+    ''', (session['user_id'],)).fetchall()
     conn.close()
 
-    return render_template('resources.html', resources=resources)
+    return render_template('my_resources.html', resources=my_resources)
+
+# Route to edit a resource
+@app.route('/edit_resource/<int:resource_id>', methods=['GET', 'POST'])
+def edit_resource(resource_id):
+    conn = get_db_connection()
+    resource = conn.execute('SELECT * FROM Resources WHERE resource_id = ? AND user_id = ?', 
+                            (resource_id, session['user_id'])).fetchone()
+
+    if not resource:
+        flash('Resource not found or you do not have permission to edit it.', 'error')
+        return redirect(url_for('my_resources'))
+
+    if request.method == 'POST':
+        title = request.form['title']
+        description = request.form.get('description', '')
+        category = request.form['category']
+        availability = request.form['availability']
+        conn.execute(
+            'UPDATE Resources SET title = ?, description = ?, category = ?, availability = ? WHERE resource_id = ?',
+            (title, description, category, availability, resource_id)
+        )
+        conn.commit()
+        conn.close()
+        flash('Resource updated successfully!', 'success')
+        return redirect(url_for('my_resources'))
+
+    conn.close()
+    return render_template('edit_resource.html', resource=resource)
+
+# Route to delete a resource
+@app.route('/delete_resource/<int:resource_id>', methods=['POST'])
+def delete_resource(resource_id):
+    conn = get_db_connection()
+    conn.execute('DELETE FROM Resources WHERE resource_id = ? AND user_id = ?', 
+                 (resource_id, session['user_id']))
+    conn.commit()
+    conn.close()
+    flash('Resource deleted successfully!', 'success')
+    return redirect(url_for('my_resources'))
 
 # Route to display and send messages
 @app.route('/messages', methods=['GET', 'POST'])
 def messages():
+    if 'user_id' not in session:
+        flash('Please log in to access your messages', 'error')
+        return redirect(url_for('login'))
+
     conn = get_db_connection()
 
     if request.method == 'POST':
@@ -133,11 +189,16 @@ def messages():
         conn.commit()
         flash('Message sent!', 'success')
 
-    # Retrieve all messages involving the current user
-    messages = conn.execute(
-        'SELECT * FROM Messages WHERE receiver_id = ? OR sender_id = ?', 
-        (session['user_id'], session['user_id'])
-    ).fetchall()
+    # Retrieve all messages involving the current user, including names
+    messages = conn.execute('''
+        SELECT Messages.*, 
+               sender.name AS sender_name, 
+               receiver.name AS receiver_name
+        FROM Messages
+        JOIN Users AS sender ON Messages.sender_id = sender.user_id
+        JOIN Users AS receiver ON Messages.receiver_id = receiver.user_id
+        WHERE receiver_id = ? OR sender_id = ?
+    ''', (session['user_id'], session['user_id'])).fetchall()
     conn.close()
 
     return render_template('messages.html', messages=messages)
@@ -167,7 +228,6 @@ def reviews():
     conn.close()
 
     return render_template('reviews.html', reviews=reviews)
-
 
 if __name__ == '__main__':
     app.run(debug=True)

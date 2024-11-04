@@ -4,37 +4,35 @@
 {% block content_title %}Your Messages{% endblock %}
 
 {% block content %}
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
+    <div class="messages-container">
+        <!-- Column for Inbox -->
+        <div class="inbox">
+            <h3>Inbox</h3>
             <ul>
                 {% for message in messages %}
-                    <li>{{ message }}</li>
+                    <li>
+                        <strong>From:</strong> {{ message['sender_name'] }}<br>
+                        <strong>To:</strong> {{ message['receiver_name'] }}<br>
+                        <strong>Message:</strong> {{ message['content'] }}<br>
+                        <strong>Sent:</strong> {{ message['timestamp'] }}
+                    </li>
+                    <hr>
                 {% endfor %}
             </ul>
-        {% endif %}
-    {% endwith %}
+        </div>
 
-    <h3>Inbox</h3>
-    <ul>
-        {% for message in messages %}
-            <li>
-                <strong>From:</strong> User {{ message['sender_id'] }}<br>
-                <strong>To:</strong> User {{ message['receiver_id'] }}<br>
-                <strong>Message:</strong> {{ message['content'] }}<br>
-                <strong>Sent:</strong> {{ message['timestamp'] }}
-            </li>
-            <hr>
-        {% endfor %}
-    </ul>
+        <!-- Column for Send Message Form -->
+        <div class="send-message-form">
+            <h3>Send a New Message</h3>
+            <form method="POST" action="{{ url_for('messages') }}">
+                <label for="receiver_id">Recipient ID:</label>
+                <input type="text" name="receiver_id" required><br>
 
-    <h3>Send a New Message</h3>
-    <form method="POST" action="{{ url_for('messages') }}">
-        <label for="receiver_id">Recipient ID:</label>
-        <input type="text" name="receiver_id" required><br>
+                <label for="content">Message:</label>
+                <textarea name="content" required></textarea><br>
 
-        <label for="content">Message:</label>
-        <textarea name="content" required></textarea><br>
-
-        <input type="submit" value="Send Message">
-    </form>
+                <input type="submit" value="Send Message">
+            </form>
+        </div>
+    </div>
 {% endblock %}

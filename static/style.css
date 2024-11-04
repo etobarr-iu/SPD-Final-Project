@@ -110,3 +110,127 @@ input[type="submit"] {
 input[type="submit"]:hover {
     background-color: #218838;
 }
+
+/* Container for the resources page layout */
+.resources-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* Style for the resource listings column */
+.resource-list {
+    flex: 1;
+    min-width: 250px;
+    max-width: 60%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for the add resource form column */
+.add-resource-form {
+    flex: 1;
+    min-width: 250px;
+    max-width: 35%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Form elements styling */
+.add-resource-form form label,
+.resource-list ul li {
+    margin-top: 10px;
+}
+
+.add-resource-form input,
+.add-resource-form textarea,
+.add-resource-form select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.add-resource-form input[type="submit"] {
+    background-color: #28a745;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+.add-resource-form input[type="submit"]:hover {
+    background-color: #218838;
+}
+
+/* Container for the messages page layout */
+.messages-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* Style for the inbox column */
+.inbox {
+    flex: 1;
+    min-width: 250px;
+    max-width: 60%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for the send message form column */
+.send-message-form {
+    flex: 1;
+    min-width: 250px;
+    max-width: 35%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Form elements styling */
+.send-message-form form label,
+.inbox ul li {
+    margin-top: 10px;
+}
+
+.send-message-form input,
+.send-message-form textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.send-message-form input[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+.send-message-form input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .resources-container {
+        flex-direction: column;
+    }
+}
