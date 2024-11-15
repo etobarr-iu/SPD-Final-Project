@@ -1,264 +1,835 @@
-/* General Styles */
+/* Global Styling */
 body {
     font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
+    color: #333;
+    line-height: 1.6;
     background-color: #f4f4f4;
+    margin: 0;
 }
 
 header {
     background-color: #333;
     color: #fff;
-    padding: 20px 0;
+    padding: 1.5rem 0;
     text-align: center;
+    border-bottom: 4px solid #023e8a;
 }
 
-h1 {
+header h1 {
+    font-size: 2rem;
+    font-weight: bold;
     margin: 0;
-}
-
-/* Navbar Styles */
-nav {
-    margin-top: 10px;
 }
 
 .navbar {
     list-style-type: none;
-    padding: 0;
-    margin: 0;
     display: flex;
     justify-content: center;
+    gap: 1rem;
     background-color: #333;
-}
-
-.navbar li {
-    margin: 0 15px;
+    padding: 0.75rem;
 }
 
 .navbar li a {
     color: #fff;
     text-decoration: none;
-    padding: 10px 15px;
-    display: block;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    border-radius: 5px;
+    transition: background-color 0.3s;
 }
 
 .navbar li a:hover {
     background-color: #555;
-    border-radius: 5px;
 }
 
-/* Main Content Styles */
-main {
-    padding: 20px;
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-h2 {
-    color: #333;
-    text-align: center;
-}
-
-section {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Footer Styles */
 footer {
     background-color: #333;
     color: #fff;
     text-align: center;
-    padding: 10px 0;
-    position: relative;
-    bottom: 0;
-    width: 100%;
-    margin-top: 20px;
+    padding: 1rem;
+    font-size: 0.9rem;
+    margin-top: 2rem;
 }
 
-/* Form Styles */
-form {
+/* Centered Titles */
+.centered-title {
+    text-align: center;
+    font-size: 2rem;
+    color: #0077b6;
+    margin-bottom: 2rem;
+}
+
+/* Containers */
+.resources-container {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Section Styling */
+.section {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #dee2e6;
+    width: 100%;
+    max-width: 500px;
+}
+
+/* Card Layout */
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
     display: flex;
     flex-direction: column;
-    max-width: 400px;
+    align-items: center;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* Card Image */
+.card-image img {
+    width: 100%;
+    height: auto;
+    max-height: 150px;
+    object-fit: cover;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* Profile Image */
+.profile-image img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #0077b6;
+}
+
+/* Message Sender Image */
+.message-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Reviews Reviewer Image */
+.review-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Card Content */
+.card-content {
+    padding: 1rem;
+    text-align: center;
+}
+
+.card-content h4 {
+    color: #0077b6;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.card-footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-top: 0.5rem;
+}
+
+/* Main Container for Two Columns */
+.resources-container {
+    display: flex;
+    flex-direction: row; /* Arrange items in a row */
+    gap: 2rem;
+    justify-content: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Individual Sections (Send Message Form & Messages List) */
+.section {
+    flex: 1; /* Ensure both sections take equal width */
+    max-width: 500px; /* Prevent sections from stretching too wide */
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #dee2e6;
+}
+
+/* Messages Container Styling */
+.messages-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1rem;
+}
+
+/* Message Block Styling */
+.message-block {
+    background-color: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #dee2e6;
+}
+
+/* Message Header Styling */
+.message-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+}
+
+.message-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.message-header span {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.message-timestamp {
+    font-style: italic;
+    margin-left: auto;
+    color: #777;
+}
+
+.message-content {
+    font-size: 1rem;
+    color: #333;
+    margin-top: 0.5rem;
+}
+
+/* Send Message Form */
+.send-message-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 500px;
     margin: 0 auto;
 }
 
-label {
-    margin-top: 10px;
+.send-message-form label {
+    font-weight: bold;
+    color: #333;
 }
 
-input, textarea {
-    padding: 8px;
-    margin-top: 5px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-}
-
-input[type="submit"] {
-    margin-top: 15px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
+.send-message-form textarea,
+.send-message-form select,
+.send-message-form input[type="submit"] {
+    padding: 0.75rem;
+    border: 1px solid #ced4da;
     border-radius: 5px;
+    font-size: 1rem;
 }
 
-input[type="submit"]:hover {
-    background-color: #218838;
+.send-message-form input[type="submit"] {
+    background-color: #0077b6;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
 }
 
-/* Container for the resources page layout */
-.resources-container {
+.send-message-form input[type="submit"]:hover {
+    background-color: #0056a3;
+}
+
+/* Reviews Styling */
+.review-list {
     display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
-/* Style for the resource listings column */
+.review-block {
+    padding: 1.5rem;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #dee2e6;
+}
+
+.review-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 0.5rem;
+}
+
+.review-rating {
+    margin-left: auto;
+    font-size: 1.1rem;
+    color: #ffc107;
+}
+
+.submit-review form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.submit-review input,
+.submit-review textarea {
+    padding: 0.75rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+}
+
+.submit-review input[type="submit"] {
+    background-color: #0077b6;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.submit-review input[type="submit"]:hover {
+    background-color: #0056a3;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .resources-container {
+        flex-direction: column;
+    }
+
+    .card-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Profile Page Container */
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    gap: 2rem;
+}
+
+/* Profile Card Styling */
+.profile-card {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #dee2e6;
+    width: 100%;
+    text-align: center;
+}
+
+.profile-card h3 {
+    color: #333;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Profile Info Layout */
+.profile-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1.5rem;
+}
+
+.profile-image img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #0077b6;
+}
+
+.no-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+.profile-details {
+    text-align: left;
+}
+
+.profile-details p {
+    font-size: 1rem;
+    color: #555;
+    margin: 0.5rem 0;
+}
+
+/* Edit Profile Button */
+.edit-profile-button {
+    display: inline-block;
+    margin-top: 1.5rem;
+    padding: 0.75rem 1.5rem;
+    background-color: #0077b6;
+    color: #fff;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.edit-profile-button:hover {
+    background-color: #0056a3;
+}
+
+/* Account Management Section */
+.account-management {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #dee2e6;
+    width: 100%;
+    text-align: center;
+}
+
+.account-management h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.account-management ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.account-management li a {
+    text-decoration: none;
+    font-weight: bold;
+    color: #0077b6;
+    transition: color 0.3s;
+}
+
+.account-management li a:hover {
+    color: #0056a3;
+}
+
+/* Logout Link */
+.logout-link {
+    display: inline-block;
+    margin-top: 1.5rem;
+    color: #d9534f;
+    font-weight: bold;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.logout-link:hover {
+    color: #c9302c;
+}
+
+/* Container for Two Columns */
+.flex-container {
+    display: flex;
+    gap: 2rem; /* Space between columns */
+    justify-content: space-between;
+    align-items: flex-start;
+    max-width: 1200px;
+    margin: 0 auto;
+    flex-wrap: wrap; /* Allows stacking on smaller screens */
+    padding: 2rem;
+}
+
+/* Resource Listings Section */
 .resource-list {
-    flex: 1;
-    min-width: 250px;
-    max-width: 60%;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    flex: 3; /* Listings take more space */
+    min-width: 60%; /* Ensures adequate width on smaller screens */
 }
 
-/* Style for the add resource form column */
+/* Add Resource Form Section */
 .add-resource-form {
-    flex: 1;
-    min-width: 250px;
-    max-width: 35%;
-    background-color: #fff;
-    padding: 20px;
+    flex: 1; /* Form takes less space */
+    min-width: 35%; /* Ensures form is visible on smaller screens */
+    background-color: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #dee2e6;
+    text-align: left;
+}
+
+/* Section Styling */
+.section h3 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    color: #0077b6;
+}
+
+/* Card Layout */
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.resource-card {
+    background-color: #ffffff;
     border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Form elements styling */
-.add-resource-form form label,
-.resource-list ul li {
-    margin-top: 10px;
+.resource-card:hover {
+    transform: translateY(-5px);
 }
 
-.add-resource-form input,
-.add-resource-form textarea,
+.resource-image img {
+    width: 100%;
+    height: auto;
+    border-bottom: 1px solid #ddd;
+    max-height: 150px;
+    object-fit: cover;
+}
+
+.resource-details {
+    padding-top: 1rem;
+    text-align: left;
+}
+
+.resource-details h4 {
+    color: #0077b6;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.resource-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+}
+
+.button {
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #fff;
+    font-weight: bold;
+}
+
+.edit-button {
+    background-color: #0077b6;
+}
+
+.delete-button {
+    background-color: #d9534f;
+}
+
+.edit-button:hover {
+    background-color: #0056a3;
+}
+
+.delete-button:hover {
+    background-color: #c9302c;
+}
+
+/* Form Styling */
+.add-resource-form label {
+    font-weight: bold;
+    color: #333;
+    margin-top: 1rem;
+    display: block;
+}
+
+.add-resource-form input, 
+.add-resource-form textarea, 
 .add-resource-form select {
     width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    margin-bottom: 1rem;
 }
 
 .add-resource-form input[type="submit"] {
     background-color: #28a745;
     color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
+    font-weight: bold;
     cursor: pointer;
-    margin-top: 15px;
+    transition: background-color 0.3s;
 }
 
 .add-resource-form input[type="submit"]:hover {
     background-color: #218838;
 }
 
-/* Container for the messages page layout */
-.messages-container {
+/* Responsive Design */
+@media (max-width: 768px) {
+    .flex-container {
+        flex-direction: column; /* Stack sections vertically */
+    }
+
+    .resource-list, 
+    .add-resource-form {
+        min-width: 100%; /* Full width on small screens */
+    }
+}
+
+/* Search Form Styling */
+.search-form form {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 1rem;
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: left;
 }
 
-/* Toggle buttons styling */
-.toggle-buttons {
-    text-align: center;
-    margin-bottom: 10px;
+.search-form label {
+    font-weight: bold;
+    color: #333;
 }
 
-.toggle-buttons button {
-    background-color: #007bff;
+.search-form input {
+    padding: 0.75rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+}
+
+.search-form .button.search-button {
+    background-color: #0077b6;
     color: white;
-    padding: 10px 15px;
+    font-weight: bold;
+    cursor: pointer;
     border: none;
+    padding: 0.75rem;
+    border-radius: 5px;
+}
+
+.search-form .button.search-button:hover {
+    background-color: #0056a3;
+}
+
+/* Search Form Styling */
+.search-form .search-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.search-form .button.search-button {
+    background-color: #0077b6;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.search-form .button.search-button:hover {
+    background-color: #0056a3;
+}
+
+.search-form .button.clear-button {
+    background-color: #6c757d;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.search-form .button.clear-button:hover {
+    background-color: #495057;
+}
+
+/* Submit Review Form */
+.submit-review form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.submit-review label {
+    font-weight: bold;
+    color: #333;
+}
+
+.submit-review select,
+.submit-review input,
+.submit-review textarea {
+    padding: 0.75rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+}
+
+.submit-review .button.submit-button {
+    background-color: #0077b6;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    border: none;
+    transition: background-color 0.3s;
+}
+
+.submit-review .button.submit-button:hover {
+    background-color: #0056a3;
+}
+
+/* Centered Title Styling */
+.centered-title {
+    text-align: center;
+    font-size: 2rem;
+    color: #0077b6;
+    margin-bottom: 1.5rem;
+}
+
+/* Form Container */
+.form-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #dee2e6;
+}
+
+/* Form Group */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+}
+
+.form-actions .button {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: bold;
     border-radius: 5px;
     cursor: pointer;
-    margin: 5px;
+    text-decoration: none;
+    text-align: center;
 }
 
-.toggle-buttons button:hover {
-    background-color: #0056b3;
+.submit-button {
+    background-color: #0077b6;
+    color: white;
+    border: none;
+    transition: background-color 0.3s;
 }
 
-/* Styling for Inbox and Sent sections */
-.inbox, .sent {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+.submit-button:hover {
+    background-color: #0056a3;
 }
 
-/* Style for the send message form column */
-.send-message-form {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+.cancel-button {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    transition: background-color 0.3s;
 }
 
-/* Responsive adjustments */
+.cancel-button:hover {
+    background-color: #495057;
+}
+
+/* Responsive Adjustments */
 @media (max-width: 768px) {
-    .messages-container {
+    .form-actions {
         flex-direction: column;
+        gap: 1rem;
     }
 }
 
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .resources-container {
-        flex-direction: column;
-    }
+.message-button {
+    display: inline-block;
+    margin-top: 1rem;
+    background-color: #0077b6;
+    color: white;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
 }
 
-/* Homepage sections container */
-.homepage-sections {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-}
-
-/* Styling for recent listings and top-rated users sections */
-.recent-listings, .top-rated-users {
-    flex: 1;
-    min-width: 250px;
-    max-width: 45%;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Styling for listings and users lists */
-.recent-listings ul, .top-rated-users ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.recent-listings li, .top-rated-users li {
-    margin-bottom: 15px;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .homepage-sections {
-        flex-direction: column;
-    }
+.message-button:hover {
+    background-color: #0056a3;
 }

@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 import sqlite3
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Change this to a secure random key
+app.secret_key = 'blah_blah_secret_whatever'  # Change this to a secure random key
 
 # Helper function to connect to the database
 def get_db_connection():
@@ -158,42 +158,38 @@ def edit_profile():
 
 @app.route('/resources', methods=['GET'])
 def resources():
-    conn = get_db_connection()
-
-    # Get search parameters
+    # Get search filters from the request
     category = request.args.get('category', '').strip()
     keywords = request.args.get('keywords', '').strip()
     location = request.args.get('location', '').strip()
 
-    # Base query for fetching resources
+    # Build the query with optional filters
     query = '''
-        SELECT Resources.*, Users.name AS user_name
+        SELECT Resources.*, Users.name AS user_name, Users.location AS user_location
         FROM Resources
         JOIN Users ON Resources.user_id = Users.user_id
+        WHERE 1 = 1
     '''
-    filters = []
     params = []
 
-    # Add filters based on search parameters
     if category:
-        filters.append("Resources.category LIKE ?")
+        query += " AND Resources.category LIKE ?"
         params.append(f"%{category}%")
     if keywords:
-        filters.append("(Resources.title LIKE ? OR Resources.description LIKE ?)")
+        query += " AND (Resources.title LIKE ? OR Resources.description LIKE ?)"
         params.extend([f"%{keywords}%", f"%{keywords}%"])
     if location:
-        filters.append("Users.location LIKE ?")
+        query += " AND Users.location LIKE ?"
         params.append(f"%{location}%")
 
-    # If there are filters, add WHERE clause to the query
-    if filters:
-        query += " WHERE " + " AND ".join(filters)
-
-    # Execute the query with parameters
+    # Execute the query
+    conn = get_db_connection()
     resources = conn.execute(query, params).fetchall()
     conn.close()
 
     return render_template('resources.html', resources=resources)
+
+
 
 @app.route('/my_resources', methods=['GET', 'POST'])
 def my_resources():
@@ -271,6 +267,7 @@ def messages():
     conn = get_db_connection()
 
     if request.method == 'POST':
+        # Sending a new message
         receiver_id = request.form['receiver_id']
         content = request.form['content']
         conn.execute(
@@ -280,24 +277,37 @@ def messages():
         conn.commit()
         flash('Message sent!', 'success')
 
-    # Retrieve all messages involving the user
-    all_messages = conn.execute('''
-        SELECT Messages.*, 
-               sender.name AS sender_name, sender.profile_image AS sender_image,
-               receiver.name AS receiver_name
-        FROM Messages
-        JOIN Users AS sender ON Messages.sender_id = sender.user_id
-        JOIN Users AS receiver ON Messages.receiver_id = receiver.user_id
-        WHERE Messages.receiver_id = ? OR Messages.sender_id = ?
-        ORDER BY Messages.timestamp DESC
-    ''', (session['user_id'], session['user_id'])).fetchall()
+    # Retrieve optional resource_id for prepopulating the message box
+    resource_id = request.args.get('resource_id')
+    prepopulated_message = ""
+    prepopulated_receiver = None
+    if resource_id:
+        resource = conn.execute(
+            'SELECT title, user_id FROM Resources WHERE resource_id = ?',
+            (resource_id,)
+        ).fetchone()
+        if resource:
+            prepopulated_message = f"I am interested in your {resource['title']}"
+            prepopulated_receiver = resource['user_id']
 
-    # Retrieve list of all users for recipient dropdown, excluding the current user
+    # Retrieve all messages for display
+    all_messages = conn.execute(
+        '''SELECT Messages.*, sender.name AS sender_name, receiver.name AS receiver_name, sender.profile_image AS sender_image
+           FROM Messages
+           JOIN Users AS sender ON Messages.sender_id = sender.user_id
+           JOIN Users AS receiver ON Messages.receiver_id = receiver.user_id
+           WHERE Messages.sender_id = ? OR Messages.receiver_id = ?
+           ORDER BY Messages.timestamp DESC''',
+        (session['user_id'], session['user_id'])
+    ).fetchall()
+
+    # Fetch all users for the dropdown
     users = conn.execute('SELECT user_id, name FROM Users WHERE user_id != ?', (session['user_id'],)).fetchall()
-
     conn.close()
 
-    return render_template('messages.html', all_messages=all_messages, users=users)
+    return render_template('messages.html', all_messages=all_messages, users=users, prepopulated_message=prepopulated_message, prepopulated_receiver=prepopulated_receiver)
+
+
 
 
 @app.route('/reviews', methods=['GET', 'POST'])
@@ -309,6 +319,7 @@ def reviews():
     conn = get_db_connection()
 
     if request.method == 'POST':
+        # Submitting a new review
         user_id = request.form['user_id']
         rating = request.form['rating']
         comment = request.form.get('comment', '')
@@ -319,16 +330,24 @@ def reviews():
         conn.commit()
         flash('Review submitted successfully!', 'success')
 
-    # Retrieve reviews with reviewer profile image
-    reviews = conn.execute('''
-        SELECT Reviews.*, reviewer.name AS reviewer_name, reviewer.profile_image AS reviewer_image
-        FROM Reviews
-        JOIN Users AS reviewer ON Reviews.reviewer_id = reviewer.user_id
-        WHERE Reviews.user_id = ?
-    ''', (session['user_id'],)).fetchall()
-    conn.close()
+    # Retrieve all reviews received by the logged-in user
+    reviews = conn.execute(
+        'SELECT Reviews.*, reviewer.name AS reviewer_name, reviewer.profile_image AS reviewer_image '
+        'FROM Reviews '
+        'JOIN Users AS reviewer ON Reviews.reviewer_id = reviewer.user_id '
+        'WHERE Reviews.user_id = ?',
+        (session['user_id'],)
+    ).fetchall()
 
-    return render_template('reviews.html', reviews=reviews)
+    # Fetch all users for the dropdown, excluding the current user
+    users = conn.execute(
+        'SELECT user_id, name FROM Users WHERE user_id != ?',
+        (session['user_id'],)
+    ).fetchall()
+
+    conn.close()
+    return render_template('reviews.html', reviews=reviews, users=users)
+
 
 
 if __name__ == '__main__':

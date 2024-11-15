@@ -1,47 +1,62 @@
 {% extends 'layout.html' %}
 
 {% block title %}Home{% endblock %}
-{% block content_title %}Welcome to Smart Neighborhood Exchange{% endblock %}
+{% block content_title %}
+    <h2 class="centered-title">Welcome to Smart Neighborhood Exchange</h2>
+{% endblock %}
 
 {% block content %}
-    <div class="homepage-sections">
-        <!-- Recent Listings Section -->
-        <div class="recent-listings">
-            <h3>Recent Listings</h3>
-            <ul>
-                {% for listing in recent_listings %}
-                    <li>
-                        <strong>Title:</strong> {{ listing['title'] }}<br>
-                        <strong>Description:</strong> {{ listing['description'] }}<br>
-                        <strong>Category:</strong> {{ listing['category'] }}<br>
-                        <strong>Posted by:</strong> {{ listing['user_name'] }}<br>
-                        <strong>Posted on:</strong> {{ listing['date_posted'] }}<br>
-                        {% if listing['images'] %}
-                            <img src="{{ url_for('static', filename=listing['images']) }}" alt="Listing Image" width="150">
-                        {% else %}
-                            <p>No image provided</p>
+<div class="resources-container">
+    <div class="section recent-listings">
+        <h3>Recent Listings</h3>
+        <div class="card-container">
+            {% for listing in recent_listings %}
+                <div class="card">
+                    {% if listing['images'] %}
+                        <div class="card-image">
+                            <img src="{{ url_for('static', filename=listing['images']) }}" alt="Listing Image">
+                        </div>
+                    {% endif %}
+                    <div class="card-content">
+                        <h4>{{ listing['title'] }}</h4>
+                        <p class="card-description">{{ listing['description']|truncate(100) }}</p>
+                        <div class="card-footer">
+                            <span class="card-category">{{ listing['category'] }}</span>
+                            <span class="card-user">{{ listing['user_name'] }}</span>
+                            <span class="card-date">{{ listing['date_posted'] }}</span>
+                        </div>
+                        <!-- Add Message Owner button if the resource is not owned by the logged-in user -->
+                        {% if listing['user_id'] != session['user_id'] %}
+                            <a href="{{ url_for('messages', resource_id=listing['resource_id']) }}" class="button message-button">
+                                Message Owner
+                            </a>
                         {% endif %}
-                    </li>
-                    <hr>
-                {% endfor %}
-            </ul>
-        </div>
-        
-        <!-- Top-Rated Users Section -->
-        <div class="top-rated-users">
-            <h3>Top-Rated Users</h3>
-            <ul>
-                {% for user in top_rated_users %}
-                    <li>
-                        {% if user['profile_image'] %}
-                            <img src="{{ url_for('static', filename=user['profile_image']) }}" alt="User Image" width="50">
-                        {% endif %}
-                        <strong>Name:</strong> {{ user['name'] }}<br>
-                        <strong>Average Rating:</strong> {{ user['average_rating']|round(1) }} / 5
-                    </li>
-                    <hr>
-                {% endfor %}
-            </ul>
+                    </div>
+                </div>
+            {% else %}
+                <p>No recent listings available.</p>
+            {% endfor %}
         </div>
     </div>
+    <div class="section top-rated-users">
+        <h3>Top-Rated Users</h3>
+        <div class="card-container">
+            {% for user in top_rated_users %}
+                <div class="card">
+                    {% if user['profile_image'] %}
+                        <div class="card-image">
+                            <img src="{{ url_for('static', filename=user['profile_image']) }}" alt="User Image">
+                        </div>
+                    {% endif %}
+                    <div class="card-content">
+                        <h4>{{ user['name'] }}</h4>
+                        <p class="card-rating">⭐ {{ user['average_rating']|round(1) }} / 5</p>
+                    </div>
+                </div>
+            {% else %}
+                <p>No top-rated users available.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 {% endblock %}

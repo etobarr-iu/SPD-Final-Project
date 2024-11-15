@@ -1,43 +1,57 @@
 {% extends 'layout.html' %}
 
 {% block title %}Messages{% endblock %}
-{% block content_title %}Your Messages{% endblock %}
+{% block content_title %}
+    <h2 class="centered-title">Your Messages</h2>
+{% endblock %}
 
 {% block content %}
-    <!-- Column for Send Message Form -->
-    <div class="send-message-form">
-        <h3>Send a New Message</h3>
-        <form method="POST" action="{{ url_for('messages') }}">
-            <label for="receiver_id">Recipient:</label>
-            <select name="receiver_id" required>
-                <option value="" disabled selected>Select a recipient</option>
-                {% for user in users %}
-                    <option value="{{ user['user_id'] }}">{{ user['name'] }}</option>
+<div class="resources-container">
+    <div class="card-container">
+        <!-- Send Message Form Section -->
+        <div class="send-message-form">
+            <h3>Send a New Message</h3>
+            <form method="POST" action="{{ url_for('messages') }}">
+                <label for="receiver_id">Recipient:</label>
+                <select name="receiver_id" required>
+                    <option value="" disabled {% if not prepopulated_receiver %}selected{% endif %}>Select a recipient</option>
+                    {% for user in users %}
+                        <option value="{{ user['user_id'] }}" {% if prepopulated_receiver == user['user_id'] %}selected{% endif %}>
+                            {{ user['name'] }}
+                        </option>
+                    {% endfor %}
+                </select><br>
+        
+                <label for="content">Message:</label>
+                <textarea name="content" required>{{ prepopulated_message }}</textarea><br>
+        
+                <input type="submit" value="Send Message" class="button send-button">
+            </form>
+        </div>
+        
+        
+
+        <!-- Messages List Section -->
+        <div class="section messages-container">
+            <h3>Your Messages</h3>
+            <div class="message-list">
+                {% for message in all_messages %}
+                    <div class="message-block">
+                        <div class="message-header">
+                            {% if message['sender_image'] %}
+                                <img src="{{ url_for('static', filename=message['sender_image']) }}" alt="Sender Image" class="message-image">
+                            {% endif %}
+                            <span><strong>From:</strong> {{ message['sender_name'] }}</span>
+                            <span><strong>To:</strong> {{ message['receiver_name'] }}</span>
+                            <span class="message-timestamp">{{ message['timestamp'] }}</span>
+                        </div>
+                        <p class="message-content">{{ message['content'] }}</p>
+                    </div>
+                {% else %}
+                    <p>No messages available.</p>
                 {% endfor %}
-            </select><br>
-
-            <label for="content">Message:</label>
-            <textarea name="content" required></textarea><br>
-
-            <input type="submit" value="Send Message">
-        </form>
+            </div>
+        </div>
     </div>
-
-    <div class="messages-container">
-        <h3>All Messages</h3>
-        <ul>
-            {% for message in all_messages %}
-                <li>
-                    {% if message['sender_image'] %}
-                        <img src="{{ url_for('static', filename=message['sender_image']) }}" alt="Sender Image" width="50">
-                    {% endif %}
-                    <strong>From:</strong> {{ message['sender_name'] }}<br>
-                    <strong>To:</strong> {{ message['receiver_name'] }}<br>
-                    <strong>Message:</strong> {{ message['content'] }}<br>
-                    <strong>Sent:</strong> {{ message['timestamp'] }}
-                </li>
-                <hr>
-            {% endfor %}
-        </ul>
-    </div>
+</div>
 {% endblock %}

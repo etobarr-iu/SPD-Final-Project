@@ -1,46 +1,51 @@
 {% extends 'layout.html' %}
 
 {% block title %}Reviews{% endblock %}
-{% block content_title %}User Reviews{% endblock %}
+{% block content_title %}
+    <h2 class="centered-title">User Reviews</h2>
+{% endblock %}
 
 {% block content %}
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul>
-                {% for message in messages %}
-                    <li>{{ message }}</li>
+<div class="resources-container">
+    <!-- Reviews Received Section -->
+    <div class="section reviews-received">
+        <h3>Reviews Received</h3>
+        <div class="review-list">
+            {% for review in reviews %}
+                <div class="review-block">
+                    <div class="review-header">
+                        {% if review['reviewer_image'] %}
+                            <img src="{{ url_for('static', filename=review['reviewer_image']) }}" alt="Reviewer Image" class="review-image">
+                        {% endif %}
+                        <span><strong>{{ review['reviewer_name'] }}</strong> (User {{ review['reviewer_id'] }})</span>
+                        <span class="review-rating">⭐ {{ review['rating'] }} / 5</span>
+                    </div>
+                    <p class="review-comment">{{ review['comment'] }}</p>
+                    <span class="review-timestamp">Reviewed on: {{ review['timestamp'] }}</span>
+                </div>
+            {% else %}
+                <p>No reviews received yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Submit a New Review Section -->
+    <div class="section submit-review">
+        <h3>Submit a New Review</h3>
+        <form method="POST" action="{{ url_for('reviews') }}">
+            <label for="user_id">User to Review:</label>
+            <select name="user_id" required>
+                <option value="" disabled selected>Select a user</option>
+                {% for user in users %}
+                    <option value="{{ user['user_id'] }}">{{ user['name'] }}</option>
                 {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
-
-    <h3>Reviews Received</h3>
-    <ul>
-        {% for review in reviews %}
-            <li>
-                {% if review['reviewer_image'] %}
-                    <img src="{{ url_for('static', filename=review['reviewer_image']) }}" alt="Reviewer Image" width="50">
-                {% endif %}
-                <strong>Reviewer:</strong> {{ review['reviewer_name'] }} (User {{ review['reviewer_id'] }})<br>
-                <strong>Rating:</strong> {{ review['rating'] }} / 5<br>
-                <strong>Comment:</strong> {{ review['comment'] }}<br>
-                <strong>Timestamp:</strong> {{ review['timestamp'] }}
-            </li>
-            <hr>
-        {% endfor %}
-    </ul>
-
-    <h3>Submit a New Review</h3>
-    <form method="POST" action="{{ url_for('reviews') }}">
-        <label for="user_id">User ID to Review:</label>
-        <input type="text" name="user_id" required><br>
-
-        <label for="rating">Rating (1-5):</label>
-        <input type="number" name="rating" min="1" max="5" required><br>
-
-        <label for="comment">Comment:</label>
-        <textarea name="comment"></textarea><br>
-
-        <input type="submit" value="Submit Review">
-    </form>
+            </select><br>
+            <label for="rating">Rating (1-5):</label>
+            <input type="number" name="rating" min="1" max="5" required><br>
+            <label for="comment">Comment:</label>
+            <textarea name="comment"></textarea><br>
+            <input type="submit" value="Submit Review" class="button submit-button">
+        </form>
+    </div>
+</div>
 {% endblock %}
