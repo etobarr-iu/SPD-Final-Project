@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 import sqlite3
 
 app = Flask(__name__)
-app.secret_key = 'extra_secret'
+app.secret_key = 'secure_random_key'  # Replace with a secure and unique key for production
 
 # Helper function to connect to the SQLite database
 def get_db_connection():
@@ -369,4 +369,4 @@ def reviews():
 # ==================== Main Entry Point ====================
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
