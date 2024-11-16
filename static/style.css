@@ -491,7 +491,7 @@ footer {
     flex: 1; /* Form takes less space */
     min-width: 35%; /* Ensures form is visible on smaller screens */
     background-color: #f9f9f9;
-    padding: 1.5rem;
+    padding: 3rem;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     border: 1px solid #dee2e6;
@@ -832,4 +832,109 @@ footer {
 
 .message-button:hover {
     background-color: #0056a3;
+}
+
+.post-resource-button {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.add-button {
+    display: inline-block;
+    background-color: #0077b6;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.add-button:hover {
+    background-color: #0056a3;
+}
+
+/* Form Container */
+.form-container {
+    max-width: 400px;
+    margin: 2rem auto;
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #dee2e6;
+}
+
+/* Form Group */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+}
+
+.form-actions .button {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+}
+
+.submit-button {
+    background-color: #0077b6;
+    color: white;
+    border: none;
+    transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+    background-color: #0056a3;
+}
+
+.secondary-button {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    transition: background-color 0.3s;
+}
+
+.secondary-button:hover {
+    background-color: #495057;
+}
+
+/* Flash Messages */
+.message-list {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1.5rem;
+    color: #d9534f;
+}
+
+.message-list li {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
 }

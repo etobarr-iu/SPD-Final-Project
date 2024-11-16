@@ -2,15 +2,19 @@
 
 {% block title %}Resources{% endblock %}
 {% block content_title %}
-    <h2 class="centered-title">Search Resources</h2>
+    <h2 class="centered-title">Resource Listings</h2>
+    <div class="post-resource-button">
+        <a href="{{ url_for('my_resources') }}" class="button add-button">+ Post New Resource</a>
+    </div>
 {% endblock %}
 
 {% block content %}
     <div class="resources-container">
-        
+
         <!-- Search Form Section -->
         <div class="search-form section">
             <h3>Search for Resources</h3>
+            
             <form method="GET" action="{{ url_for('resources') }}">
                 <label for="category">Category:</label>
                 <input type="text" name="category" placeholder="Enter category" value="{{ request.args.get('category', '') }}"><br>
@@ -28,9 +32,12 @@
             </form>
         </div>
 
+
         <!-- Resource Listings Section -->
         <div class="resource-list section">
             <h3>Resource Listings</h3>
+            <!-- Post New Resource Button -->
+        
             <div class="card-container">
                 {% for resource in resources %}
     <div class="resource-card">

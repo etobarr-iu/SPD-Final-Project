@@ -2,13 +2,13 @@
 
 {% block title %}Login Page{% endblock %}
 
-{% block content_title %}Login Page{% endblock %}
+{% block content_title %}<h2 class="centered-title"> Login to Your Account </h2>{% endblock %}
 
 {% block content %}
-
+<div class="form-container">
     {% with messages = get_flashed_messages() %}
         {% if messages %}
-            <ul>
+            <ul class="message-list">
                 {% for message in messages %}
                     <li>{{ message }}</li>
                 {% endfor %}
@@ -17,12 +17,20 @@
     {% endwith %}
 
     <form method="POST" action="/login">
-        <label for="email">Email:</label>
-        <input type="email" name="email" required><br>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" name="email" id="email" required>
+        </div>
 
-        <label for="password">Password:</label>
-        <input type="password" name="password" required><br>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" required>
+        </div>
 
-        <input type="submit" value="Login">
+        <div class="form-actions">
+            <input type="submit" value="Login" class="button submit-button">
+            <a href="{{ url_for('register') }}" class="button secondary-button">Register</a>
+        </div>
     </form>
+</div>
 {% endblock %}
