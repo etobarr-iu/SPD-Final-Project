@@ -1,73 +1,79 @@
 {% extends 'layout.html' %}
 
 {% block title %}Resources{% endblock %}
+
 {% block content_title %}
+    <!-- Page Title -->
     <h2 class="centered-title">Resource Listings</h2>
+    <!-- Post New Resource Button -->
     <div class="post-resource-button">
         <a href="{{ url_for('my_resources') }}" class="button add-button">+ Post New Resource</a>
     </div>
 {% endblock %}
 
 {% block content %}
-    <div class="resources-container">
+<div class="resources-container">
 
-        <!-- Search Form Section -->
-        <div class="search-form section">
-            <h3>Search for Resources</h3>
-            
-            <form method="GET" action="{{ url_for('resources') }}">
-                <label for="category">Category:</label>
-                <input type="text" name="category" placeholder="Enter category" value="{{ request.args.get('category', '') }}"><br>
+    <!-- Search Form Section -->
+    <div class="search-form section">
+        <h3>Search for Resources</h3>
+        <form method="GET" action="{{ url_for('resources') }}">
+            <!-- Category Input -->
+            <label for="category">Category:</label>
+            <input type="text" name="category" placeholder="Enter category" value="{{ request.args.get('category', '') }}"><br>
 
-                <label for="keywords">Keywords:</label>
-                <input type="text" name="keywords" placeholder="Enter keywords" value="{{ request.args.get('keywords', '') }}"><br>
+            <!-- Keywords Input -->
+            <label for="keywords">Keywords:</label>
+            <input type="text" name="keywords" placeholder="Enter keywords" value="{{ request.args.get('keywords', '') }}"><br>
 
-                <label for="location">Location:</label>
-                <input type="text" name="location" placeholder="Enter location" value="{{ request.args.get('location', '') }}"><br>
+            <!-- Location Input -->
+            <label for="location">Location:</label>
+            <input type="text" name="location" placeholder="Enter location" value="{{ request.args.get('location', '') }}"><br>
 
-                <div class="search-actions">
-                    <input type="submit" value="Search" class="button search-button">
-                    <a href="{{ url_for('resources') }}" class="button clear-button">Clear Filters</a>
+            <!-- Search Actions -->
+            <div class="search-actions">
+                <input type="submit" value="Search" class="button search-button">
+                <a href="{{ url_for('resources') }}" class="button clear-button">Clear Filters</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Resource Listings Section -->
+    <div class="resource-list section">
+        <h3>Resource Listings</h3>
+        <div class="card-container">
+            {% for resource in resources %}
+                <div class="resource-card">
+                    <!-- Resource Image -->
+                    {% if resource['images'] %}
+                        <div class="resource-image">
+                            <img src="{{ url_for('static', filename=resource['images']) }}" alt="Resource Image">
+                        </div>
+                    {% endif %}
+
+                    <!-- Resource Details -->
+                    <div class="resource-details">
+                        <h4>{{ resource['title'] }}</h4>
+                        <p>{{ resource['description']|truncate(100) }}</p>
+                        <p><strong>Category:</strong> {{ resource['category'] }}</p>
+                        <p><strong>Location:</strong> {{ resource['user_location'] }}</p>
+                        <p><strong>Availability:</strong> {{ resource['availability'] }}</p>
+                        <p><strong>Posted by:</strong> {{ resource['user_name'] }}</p>
+                        <p><strong>Posted on:</strong> {{ resource['date_posted'] }}</p>
+                        
+                        <!-- Show Message Owner button if the resource is not owned by the current user -->
+                        {% if resource['user_id'] != session['user_id'] %}
+                            <a href="{{ url_for('messages', resource_id=resource['resource_id']) }}" class="button message-button">
+                                Message Owner
+                            </a>
+                        {% endif %}
+                    </div>
                 </div>
-            </form>
-        </div>
-
-
-        <!-- Resource Listings Section -->
-        <div class="resource-list section">
-            <h3>Resource Listings</h3>
-            <!-- Post New Resource Button -->
-        
-            <div class="card-container">
-                {% for resource in resources %}
-    <div class="resource-card">
-        {% if resource['images'] %}
-            <div class="resource-image">
-                <img src="{{ url_for('static', filename=resource['images']) }}" alt="Resource Image">
-            </div>
-        {% endif %}
-        <div class="resource-details">
-            <h4>{{ resource['title'] }}</h4>
-            <p>{{ resource['description']|truncate(100) }}</p>
-            <p><strong>Category:</strong> {{ resource['category'] }}</p>
-            <p><strong>Location:</strong> {{ resource['user_location'] }}</p>
-            <p><strong>Availability:</strong> {{ resource['availability'] }}</p>
-            <p><strong>Posted by:</strong> {{ resource['user_name'] }}</p>
-            <p><strong>Posted on:</strong> {{ resource['date_posted'] }}</p>
-            
-            <!-- Show Message Owner button only if the resource is not owned by the current user -->
-            {% if resource['user_id'] != session['user_id'] %}
-                <a href="{{ url_for('messages', resource_id=resource['resource_id']) }}" class="button message-button">
-                    Message Owner
-                </a>
-            {% endif %}
+            {% else %}
+                <!-- No Resources Placeholder -->
+                <p>No resources found. Try adjusting your filters or add a new resource!</p>
+            {% endfor %}
         </div>
     </div>
-{% endfor %}
-
-
-
-            </div>
-        </div>
-    </div>
+</div>
 {% endblock %}

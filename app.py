@@ -2,20 +2,24 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 import sqlite3
 
 app = Flask(__name__)
-app.secret_key = 'blah_blah_secret_whatever'  # Change this to a secure random key
+app.secret_key = 'secure_random_key'  # Replace with a secure and unique key for production
 
-# Helper function to connect to the database
+# Helper function to connect to the SQLite database
 def get_db_connection():
     conn = sqlite3.connect('exchange.db')
-    conn.row_factory = sqlite3.Row
+    conn.row_factory = sqlite3.Row  # Allows accessing rows as dictionaries
     return conn
+
+# ==================== Registration and Login ====================
 
 @app.route('/registration')
 def registration():
+    """Render the user registration page."""
     return render_template('register.html')
 
 @app.route('/register', methods=['POST'])
 def register():
+    """Handle user registration."""
     name = request.form['name']
     email = request.form['email']
     password = request.form['password']
@@ -28,6 +32,7 @@ def register():
 
     conn = get_db_connection()
     try:
+        # Insert user details into the database
         conn.execute(
             "INSERT INTO Users (name, email, password, profile_image, location) VALUES (?, ?, ?, ?, ?)",
             (name, email, password, profile_image, location)
@@ -41,9 +46,9 @@ def register():
 
     return redirect(url_for('login'))
 
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    """Handle user login."""
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
@@ -67,16 +72,20 @@ def login():
 
 @app.route('/logout')
 def logout():
+    """Log out the user."""
     session.pop('user_id', None)
     flash('Logged out successfully', 'success')
     return redirect(url_for('index'))
 
+# ==================== Homepage ====================
+
 @app.route('/')
 @app.route('/index')
 def index():
+    """Display the homepage with recent listings and top-rated users."""
     conn = get_db_connection()
 
-    # Recent listings query remains the same
+    # Fetch recent resource listings
     recent_listings = conn.execute('''
         SELECT Resources.*, Users.name AS user_name, Users.profile_image
         FROM Resources
@@ -85,7 +94,7 @@ def index():
         LIMIT 5
     ''').fetchall()
 
-    # Top-rated users query now includes profile_image
+    # Fetch top-rated users
     top_rated_users = conn.execute('''
         SELECT Users.user_id, Users.name, Users.profile_image, AVG(Reviews.rating) AS average_rating
         FROM Reviews
@@ -99,8 +108,11 @@ def index():
     conn.close()
     return render_template('homepage.html', recent_listings=recent_listings, top_rated_users=top_rated_users)
 
+# ==================== Profile Management ====================
+
 @app.route('/profile')
 def profile():
+    """Display the user's profile."""
     user_id = session.get('user_id')
     if user_id is None:
         flash('Please log in to access your profile', 'error')
@@ -118,6 +130,7 @@ def profile():
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
 def edit_profile():
+    """Edit user profile details."""
     if 'user_id' not in session:
         flash('Please log in to access your profile', 'error')
         return redirect(url_for('login'))
@@ -126,13 +139,12 @@ def edit_profile():
     conn = get_db_connection()
 
     if request.method == 'POST':
-        # Get form data
+        # Update profile details
         name = request.form['name']
         email = request.form['email']
         location = request.form.get('location', '')
         profile_image = request.form.get('profile_image', '')
 
-        # Update the user's profile information
         conn.execute('''
             UPDATE Users 
             SET name = ?, email = ?, location = ?, profile_image = ? 
@@ -144,7 +156,7 @@ def edit_profile():
         flash('Profile updated successfully!', 'success')
         return redirect(url_for('profile'))
 
-    # GET request: Retrieve the current user information to pre-fill the form
+    # Pre-fill form with current user data
     user = conn.execute('SELECT * FROM Users WHERE user_id = ?', (user_id,)).fetchone()
     conn.close()
 
@@ -154,10 +166,11 @@ def edit_profile():
                            user_location=user['location'], 
                            user_profile_image=user['profile_image'])
 
-
+# ==================== Resource Management ====================
 
 @app.route('/resources', methods=['GET'])
 def resources():
+    """Search and display available resources."""
     # Get search filters from the request
     category = request.args.get('category', '').strip()
     keywords = request.args.get('keywords', '').strip()
@@ -189,10 +202,9 @@ def resources():
 
     return render_template('resources.html', resources=resources)
 
-
-
 @app.route('/my_resources', methods=['GET', 'POST'])
 def my_resources():
+    """Manage resources owned by the logged-in user."""
     if 'user_id' not in session:
         flash('Please log in to access your resources', 'error')
         return redirect(url_for('login'))
@@ -225,6 +237,7 @@ def my_resources():
 
 @app.route('/edit_resource/<int:resource_id>', methods=['GET', 'POST'])
 def edit_resource(resource_id):
+    """Edit an existing resource."""
     conn = get_db_connection()
     resource = conn.execute('SELECT * FROM Resources WHERE resource_id = ? AND user_id = ?', 
                             (resource_id, session['user_id'])).fetchone()
@@ -234,6 +247,7 @@ def edit_resource(resource_id):
         return redirect(url_for('my_resources'))
 
     if request.method == 'POST':
+        # Update resource details
         title = request.form['title']
         description = request.form.get('description', '')
         category = request.form['category']
@@ -251,6 +265,7 @@ def edit_resource(resource_id):
 
 @app.route('/delete_resource/<int:resource_id>', methods=['POST'])
 def delete_resource(resource_id):
+    """Delete a resource owned by the logged-in user."""
     conn = get_db_connection()
     conn.execute('DELETE FROM Resources WHERE resource_id = ? AND user_id = ?', (resource_id, session['user_id']))
     conn.commit()
@@ -258,8 +273,11 @@ def delete_resource(resource_id):
     flash('Resource deleted successfully', 'success')
     return redirect(url_for('my_resources'))
 
+# ==================== Messaging System ====================
+
 @app.route('/messages', methods=['GET', 'POST'])
 def messages():
+    """Handle user messaging."""
     if 'user_id' not in session:
         flash('Please log in to access your messages', 'error')
         return redirect(url_for('login'))
@@ -307,11 +325,11 @@ def messages():
 
     return render_template('messages.html', all_messages=all_messages, users=users, prepopulated_message=prepopulated_message, prepopulated_receiver=prepopulated_receiver)
 
-
-
+# ==================== Reviews ====================
 
 @app.route('/reviews', methods=['GET', 'POST'])
 def reviews():
+    """Handle user reviews."""
     if 'user_id' not in session:
         flash('Please log in to access your reviews', 'error')
         return redirect(url_for('login'))
@@ -348,7 +366,7 @@ def reviews():
     conn.close()
     return render_template('reviews.html', reviews=reviews, users=users)
 
-
+# ==================== Main Entry Point ====================
 
 if __name__ == '__main__':
     app.run(debug=True)

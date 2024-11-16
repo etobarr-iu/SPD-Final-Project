@@ -3,19 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Page Title -->
     <title>{% block title %}Smart Neighborhood Exchange{% endblock %}</title>
+    <!-- Link to the External Stylesheet -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
+    <!-- Header Section -->
     <header>
         <h1>Smart Neighborhood Exchange</h1>
+        <!-- Navigation Menu -->
         <nav>
             <ul class="navbar">
                 <li><a href="{{ url_for('index') }}">Home</a></li>
                 <li><a href="{{ url_for('resources') }}">Resources</a></li>
                 <li><a href="{{ url_for('messages') }}">Messages</a></li>
                 <li><a href="{{ url_for('reviews') }}">Reviews</a></li>
+                <!-- Conditional Links Based on User Login Status -->
                 {% if session.get('user_id') %}
                     <li><a href="{{ url_for('profile') }}">Profile</a></li>
                     <li><a href="{{ url_for('logout') }}">Logout</a></li>
@@ -27,13 +32,17 @@
         </nav>
     </header>
 
+    <!-- Main Content Area -->
     <main>
+        <!-- Dynamic Content Title -->
         <h2>{% block content_title %}{% endblock %}</h2>
         <section>
+            <!-- Dynamic Page Content -->
             {% block content %}{% endblock %}
         </section>
     </main>
 
+    <!-- Footer Section -->
     <footer>
         <p>&copy; 2024 Smart Neighborhood Exchange</p>
     </footer>

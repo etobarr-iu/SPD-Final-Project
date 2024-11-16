@@ -1,42 +1,50 @@
 {% extends 'layout.html' %}
 
 {% block title %}Profile{% endblock %}
+
 {% block content_title %}
+    <!-- Page Title -->
     <h2 class="centered-title">Your Profile</h2>
 {% endblock %}
 
 {% block content %}
-    <div class="profile-container">
+<div class="profile-container">
 
-        <!-- Profile Information Section -->
-        <div class="profile-card">
-            <h3>Welcome, {{ user_name }}!</h3>
-            <p>Here is your profile information:</p>
-            <div class="profile-info">
-                <div class="profile-image">
-                    {% if user_profile_image %}
-                        <img src="{{ url_for('static', filename=user_profile_image) }}" alt="Profile Image">
-                    {% else %}
-                        <div class="no-image">No profile image provided</div>
-                    {% endif %}
-                </div>
-                <div class="profile-details">
-                    <p><strong>Email:</strong> {{ user_email }}</p>
-                    <p><strong>Location:</strong> {{ user_location }}</p>
-                </div>
+    <!-- Profile Information Section -->
+    <div class="profile-card">
+        <h3>Welcome, {{ user_name }}!</h3>
+        <p>Here is your profile information:</p>
+        <div class="profile-info">
+            <!-- Profile Image -->
+            <div class="profile-image">
+                {% if user_profile_image %}
+                    <img src="{{ url_for('static', filename=user_profile_image) }}" alt="Profile Image">
+                {% else %}
+                    <div class="no-image">No profile image provided</div>
+                {% endif %}
             </div>
-            <a href="{{ url_for('edit_profile') }}" class="button edit-profile-button">Edit Profile</a>
+            
+            <!-- Profile Details -->
+            <div class="profile-details">
+                <p><strong>Email:</strong> {{ user_email }}</p>
+                <p><strong>Location:</strong> {{ user_location }}</p>
+            </div>
         </div>
-
-        <!-- Account Management Links -->
-        <div class="account-management">
-            <h3>Manage Your Account</h3>
-            <ul>
-                <li><a href="{{ url_for('my_resources') }}">My Resources</a></li>
-                <li><a href="{{ url_for('messages') }}">Messages</a></li>
-                <li><a href="{{ url_for('reviews') }}">Reviews</a></li>
-            </ul>
-            <a href="{{ url_for('logout') }}" class="logout-link">Logout</a>
-        </div>
+        <!-- Edit Profile Button -->
+        <a href="{{ url_for('edit_profile') }}" class="button edit-profile-button">Edit Profile</a>
     </div>
+
+    <!-- Account Management Links -->
+    <div class="account-management">
+        <h3>Manage Your Account</h3>
+        <ul>
+            <li><a href="{{ url_for('my_resources') }}">My Resources</a></li>
+            <li><a href="{{ url_for('messages') }}">Messages</a></li>
+            <li><a href="{{ url_for('reviews') }}">Reviews</a></li>
+        </ul>
+        <!-- Logout Link -->
+        <a href="{{ url_for('logout') }}" class="logout-link">Logout</a>
+    </div>
+
+</div>
 {% endblock %}

@@ -1,17 +1,21 @@
 {% extends 'layout.html' %}
 
 {% block title %}Messages{% endblock %}
+
 {% block content_title %}
+    <!-- Page Title -->
     <h2 class="centered-title">Your Messages</h2>
 {% endblock %}
 
 {% block content %}
 <div class="resources-container">
     <div class="card-container">
+        
         <!-- Send Message Form Section -->
         <div class="send-message-form">
             <h3>Send a New Message</h3>
             <form method="POST" action="{{ url_for('messages') }}">
+                <!-- Recipient Selection -->
                 <label for="receiver_id">Recipient:</label>
                 <select name="receiver_id" required>
                     <option value="" disabled {% if not prepopulated_receiver %}selected{% endif %}>Select a recipient</option>
@@ -20,34 +24,41 @@
                             {{ user['name'] }}
                         </option>
                     {% endfor %}
-                </select><br>
-        
+                </select>
+                <br>
+
+                <!-- Message Content -->
                 <label for="content">Message:</label>
-                <textarea name="content" required>{{ prepopulated_message }}</textarea><br>
-        
+                <textarea name="content" required>{{ prepopulated_message }}</textarea>
+                <br>
+
+                <!-- Submit Button -->
                 <input type="submit" value="Send Message" class="button send-button">
             </form>
         </div>
         
-        
-
         <!-- Messages List Section -->
         <div class="section messages-container">
             <h3>Your Messages</h3>
             <div class="message-list">
                 {% for message in all_messages %}
                     <div class="message-block">
+                        <!-- Message Header -->
                         <div class="message-header">
+                            <!-- Sender Profile Image -->
                             {% if message['sender_image'] %}
                                 <img src="{{ url_for('static', filename=message['sender_image']) }}" alt="Sender Image" class="message-image">
                             {% endif %}
+                            <!-- Sender and Receiver Information -->
                             <span><strong>From:</strong> {{ message['sender_name'] }}</span>
                             <span><strong>To:</strong> {{ message['receiver_name'] }}</span>
                             <span class="message-timestamp">{{ message['timestamp'] }}</span>
                         </div>
+                        <!-- Message Content -->
                         <p class="message-content">{{ message['content'] }}</p>
                     </div>
                 {% else %}
+                    <!-- No Messages Placeholder -->
                     <p>No messages available.</p>
                 {% endfor %}
             </div>

@@ -1,18 +1,22 @@
 {% extends 'layout.html' %}
 
 {% block title %}Reviews{% endblock %}
+
 {% block content_title %}
+    <!-- Page Title -->
     <h2 class="centered-title">User Reviews</h2>
 {% endblock %}
 
 {% block content %}
 <div class="resources-container">
+
     <!-- Reviews Received Section -->
     <div class="section reviews-received">
         <h3>Reviews Received</h3>
         <div class="review-list">
             {% for review in reviews %}
                 <div class="review-block">
+                    <!-- Reviewer Details -->
                     <div class="review-header">
                         {% if review['reviewer_image'] %}
                             <img src="{{ url_for('static', filename=review['reviewer_image']) }}" alt="Reviewer Image" class="review-image">
@@ -20,10 +24,12 @@
                         <span><strong>{{ review['reviewer_name'] }}</strong> (User {{ review['reviewer_id'] }})</span>
                         <span class="review-rating">⭐ {{ review['rating'] }} / 5</span>
                     </div>
+                    <!-- Review Content -->
                     <p class="review-comment">{{ review['comment'] }}</p>
                     <span class="review-timestamp">Reviewed on: {{ review['timestamp'] }}</span>
                 </div>
             {% else %}
+                <!-- No Reviews Placeholder -->
                 <p>No reviews received yet.</p>
             {% endfor %}
         </div>
@@ -33,6 +39,7 @@
     <div class="section submit-review">
         <h3>Submit a New Review</h3>
         <form method="POST" action="{{ url_for('reviews') }}">
+            <!-- User to Review Dropdown -->
             <label for="user_id">User to Review:</label>
             <select name="user_id" required>
                 <option value="" disabled selected>Select a user</option>
@@ -40,10 +47,16 @@
                     <option value="{{ user['user_id'] }}">{{ user['name'] }}</option>
                 {% endfor %}
             </select><br>
+
+            <!-- Rating Input -->
             <label for="rating">Rating (1-5):</label>
             <input type="number" name="rating" min="1" max="5" required><br>
+
+            <!-- Comment Input -->
             <label for="comment">Comment:</label>
             <textarea name="comment"></textarea><br>
+
+            <!-- Submit Button -->
             <input type="submit" value="Submit Review" class="button submit-button">
         </form>
     </div>

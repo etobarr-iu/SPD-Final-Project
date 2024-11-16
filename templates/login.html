@@ -2,10 +2,14 @@
 
 {% block title %}Login Page{% endblock %}
 
-{% block content_title %}<h2 class="centered-title"> Login to Your Account </h2>{% endblock %}
+{% block content_title %}
+    <!-- Page Title -->
+    <h2 class="centered-title">Login to Your Account</h2>
+{% endblock %}
 
 {% block content %}
 <div class="form-container">
+    <!-- Display Flash Messages -->
     {% with messages = get_flashed_messages() %}
         {% if messages %}
             <ul class="message-list">
@@ -16,20 +20,27 @@
         {% endif %}
     {% endwith %}
 
+    <!-- Login Form -->
     <form method="POST" action="/login">
+        <!-- Email Input -->
         <div class="form-group">
             <label for="email">Email:</label>
             <input type="email" name="email" id="email" required>
         </div>
 
+        <!-- Password Input -->
         <div class="form-group">
             <label for="password">Password:</label>
             <input type="password" name="password" id="password" required>
         </div>
 
+        <!-- Form Actions -->
         <div class="form-actions">
+            <!-- Submit Button -->
             <input type="submit" value="Login" class="button submit-button">
-            <a href="{{ url_for('register') }}" class="button secondary-button">Register</a>
+            
+            <!-- Register Link -->
+            <a href="{{ url_for('registration') }}" class="button secondary-button">Register</a>
         </div>
     </form>
 </div>

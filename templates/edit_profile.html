@@ -1,35 +1,48 @@
 {% extends 'layout.html' %}
 
 {% block title %}Edit Profile{% endblock %}
+
 {% block content_title %}
+    <!-- Page Title -->
     <h2 class="centered-title">Edit Your Profile</h2>
 {% endblock %}
 
 {% block content %}
 <div class="form-container">
+    <!-- Form for Editing User Profile -->
     <form method="POST" action="{{ url_for('edit_profile') }}">
+        <!-- Name Input -->
         <div class="form-group">
             <label for="name">Name:</label>
             <input type="text" name="name" value="{{ user_name }}" required>
         </div>
 
+        <!-- Email Input -->
         <div class="form-group">
             <label for="email">Email:</label>
             <input type="email" name="email" value="{{ user_email }}" required>
         </div>
 
+        <!-- Location Input -->
         <div class="form-group">
             <label for="location">Location:</label>
             <input type="text" name="location" value="{{ user_location }}">
         </div>
 
+        <!-- Profile Image Path Input -->
         <div class="form-group">
             <label for="profile_image">Profile Image Path:</label>
-            <input type="text" name="profile_image" value="{{ user_profile_image }}" placeholder="e.g., /static/images/profile.jpg">
+            <input type="text" name="profile_image" 
+                   value="{{ user_profile_image }}" 
+                   placeholder="e.g., /static/images/profile.jpg">
         </div>
 
+        <!-- Form Actions -->
         <div class="form-actions">
+            <!-- Submit Button -->
             <input type="submit" value="Update Profile" class="button submit-button">
+            
+            <!-- Cancel Button -->
             <a href="{{ url_for('profile') }}" class="button cancel-button">Cancel</a>
         </div>
     </form>

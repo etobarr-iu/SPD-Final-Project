@@ -1,10 +1,15 @@
 {% extends 'layout.html' %}
 
 {% block title %}Register an Account{% endblock %}
-{% block content_title %}<h2 class="centered-title">Create Your Account</h2>{% endblock %}
+
+{% block content_title %}
+    <!-- Page Title -->
+    <h2 class="centered-title">Create Your Account</h2>
+{% endblock %}
 
 {% block content %}
 <div class="form-container">
+    <!-- Display Flash Messages -->
     {% with messages = get_flashed_messages() %}
         {% if messages %}
             <ul class="message-list">
@@ -15,34 +20,44 @@
         {% endif %}
     {% endwith %}
 
+    <!-- Registration Form -->
     <form method="POST" action="{{ url_for('register') }}">
+        <!-- Name Input -->
         <div class="form-group">
             <label for="name">Name:</label>
             <input type="text" name="name" id="name" required>
         </div>
 
+        <!-- Email Input -->
         <div class="form-group">
             <label for="email">Email:</label>
             <input type="email" name="email" id="email" required>
         </div>
 
+        <!-- Password Input -->
         <div class="form-group">
             <label for="password">Password:</label>
             <input type="password" name="password" id="password" required>
         </div>
 
+        <!-- Profile Image Input -->
         <div class="form-group">
             <label for="profile_image">Profile Image (Path):</label>
             <input type="text" name="profile_image" id="profile_image" placeholder="e.g., /static/images/profile.jpg">
         </div>
 
+        <!-- Location Input -->
         <div class="form-group">
             <label for="location">Location:</label>
             <input type="text" name="location" id="location" placeholder="e.g., New York, USA">
         </div>
 
+        <!-- Form Actions -->
         <div class="form-actions">
+            <!-- Submit Button -->
             <input type="submit" value="Register" class="button submit-button">
+            
+            <!-- Go to Login Link -->
             <a href="{{ url_for('login') }}" class="button secondary-button">Go to Login</a>
         </div>
     </form>
